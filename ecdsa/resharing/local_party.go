@@ -16,6 +16,7 @@ import (
 	"github.com/binance-chain/tss-lib/crypto/vss"
 	"github.com/binance-chain/tss-lib/ecdsa/keygen"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 // Implements Party
@@ -65,6 +66,7 @@ type (
 // You may optionally generate and set the LocalPreParams if you would like to use pre-generated safe primes and Paillier secret.
 // (This is similar to providing the `optionalPreParams` to `keygen.LocalParty`).
 func NewLocalParty(
+	logger logrus.FieldLogger,
 	params *tss.ReSharingParameters,
 	key keygen.LocalPartySaveData,
 	out chan<- tss.Message,
@@ -84,6 +86,7 @@ func NewLocalParty(
 		out:       out,
 		end:       end,
 	}
+	p.SetLogger(logger)
 	// msgs init
 	p.temp.dgRound1Messages = make([]tss.ParsedMessage, oldPartyCount)           // from t+1 of Old Committee
 	p.temp.dgRound2Message1s = make([]tss.ParsedMessage, params.NewPartyCount()) // from n of New Committee
@@ -96,6 +99,10 @@ func NewLocalParty(
 		p.save.LocalPreParams = key.LocalPreParams
 	}
 	return p
+}
+
+func (p *LocalParty) Logger() logrus.FieldLogger {
+	return p.GetLogger()
 }
 
 func (p *LocalParty) FirstRound() tss.Round {

@@ -15,6 +15,7 @@ import (
 	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
 	"github.com/binance-chain/tss-lib/crypto/vss"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 // Implements Party
@@ -56,6 +57,7 @@ type (
 
 // Exported, used in `tss` client
 func NewLocalParty(
+	logger logrus.FieldLogger,
 	params *tss.Parameters,
 	out chan<- tss.Message,
 	end chan<- LocalPartySaveData,
@@ -81,6 +83,7 @@ func NewLocalParty(
 		out:       out,
 		end:       end,
 	}
+	p.SetLogger(logger)
 	// msgs init
 	p.temp.kgRound1Messages = make([]tss.ParsedMessage, partyCount)
 	p.temp.kgRound2Message1s = make([]tss.ParsedMessage, partyCount)
@@ -89,6 +92,10 @@ func NewLocalParty(
 	// temp data init
 	p.temp.KGCs = make([]cmt.HashCommitment, partyCount)
 	return p
+}
+
+func (p *LocalParty) Logger() logrus.FieldLogger {
+	return p.GetLogger()
 }
 
 func (p *LocalParty) FirstRound() tss.Round {

@@ -62,7 +62,7 @@ func TestE2EConcurrent(t *testing.T) {
 	for i := 0; i < len(signPIDs); i++ {
 		params := tss.NewParameters(p2pCtx, signPIDs[i], len(signPIDs), threshold)
 
-		P := NewLocalParty(msg, params, keys[i], outCh, endCh).(*LocalParty)
+		P := NewLocalParty(nil, msg, params, keys[i], outCh, endCh).(*LocalParty)
 		parties = append(parties, P)
 		go func(P *LocalParty) {
 			if err := P.Start(); err != nil {

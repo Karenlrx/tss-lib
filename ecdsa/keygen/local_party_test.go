@@ -57,9 +57,9 @@ func TestStartRound1Paillier(t *testing.T) {
 	var lp *LocalParty
 	out := make(chan tss.Message, len(pIDs))
 	if 0 < len(fixtures) {
-		lp = NewLocalParty(params, out, nil, fixtures[0].LocalPreParams).(*LocalParty)
+		lp = NewLocalParty(nil, params, out, nil, fixtures[0].LocalPreParams).(*LocalParty)
 	} else {
-		lp = NewLocalParty(params, out, nil).(*LocalParty)
+		lp = NewLocalParty(nil, params, out, nil).(*LocalParty)
 	}
 	if err := lp.Start(); err != nil {
 		assert.FailNow(t, err.Error())
@@ -97,9 +97,9 @@ func TestFinishAndSaveH1H2(t *testing.T) {
 	var lp *LocalParty
 	out := make(chan tss.Message, len(pIDs))
 	if 0 < len(fixtures) {
-		lp = NewLocalParty(params, out, nil, fixtures[0].LocalPreParams).(*LocalParty)
+		lp = NewLocalParty(nil, params, out, nil, fixtures[0].LocalPreParams).(*LocalParty)
 	} else {
-		lp = NewLocalParty(params, out, nil).(*LocalParty)
+		lp = NewLocalParty(nil, params, out, nil).(*LocalParty)
 	}
 	if err := lp.Start(); err != nil {
 		assert.FailNow(t, err.Error())
@@ -144,9 +144,9 @@ func TestBadMessageCulprits(t *testing.T) {
 	var lp *LocalParty
 	out := make(chan tss.Message, len(pIDs))
 	if 0 < len(fixtures) {
-		lp = NewLocalParty(params, out, nil, fixtures[0].LocalPreParams).(*LocalParty)
+		lp = NewLocalParty(nil, params, out, nil, fixtures[0].LocalPreParams).(*LocalParty)
 	} else {
-		lp = NewLocalParty(params, out, nil).(*LocalParty)
+		lp = NewLocalParty(nil, params, out, nil).(*LocalParty)
 	}
 	if err := lp.Start(); err != nil {
 		assert.FailNow(t, err.Error())
@@ -194,9 +194,9 @@ func TestE2EConcurrentAndSaveFixtures(t *testing.T) {
 		var P *LocalParty
 		params := tss.NewParameters(p2pCtx, pIDs[i], len(pIDs), threshold)
 		if i < len(fixtures) {
-			P = NewLocalParty(params, outCh, endCh, fixtures[i].LocalPreParams).(*LocalParty)
+			P = NewLocalParty(nil, params, outCh, endCh, fixtures[i].LocalPreParams).(*LocalParty)
 		} else {
-			P = NewLocalParty(params, outCh, endCh).(*LocalParty)
+			P = NewLocalParty(nil, params, outCh, endCh).(*LocalParty)
 		}
 		parties = append(parties, P)
 		go func(P *LocalParty) {

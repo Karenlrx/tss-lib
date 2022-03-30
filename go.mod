@@ -15,6 +15,7 @@ require (
 	github.com/otiai10/mint v1.3.1 // indirect
 	github.com/otiai10/primes v0.0.0-20180210170552-f6d2a1ba97c4
 	github.com/pkg/errors v0.9.1
+	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.6.1
 	go.uber.org/zap v1.15.0 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect

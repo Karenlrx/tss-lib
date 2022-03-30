@@ -9,6 +9,7 @@ package signing
 import (
 	"github.com/binance-chain/tss-lib/ecdsa/keygen"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -26,6 +27,7 @@ type (
 		ok      []bool // `ok` tracks parties which have been verified by Update()
 		started bool
 		number  int
+		logger  logrus.FieldLogger
 	}
 	round1 struct {
 		*base

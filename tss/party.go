@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/binance-chain/tss-lib/common"
+	"github.com/sirupsen/logrus"
 )
 
 type Party interface {
@@ -29,6 +30,7 @@ type Party interface {
 	WrapError(err error, culprits ...*PartyID) *Error
 	PartyID() *PartyID
 	String() string
+	Logger() logrus.FieldLogger
 
 	// Private lifecycle methods
 	setRound(Round) *Error
@@ -42,6 +44,15 @@ type BaseParty struct {
 	mtx        sync.Mutex
 	rnd        Round
 	FirstRound Round
+	Logger     logrus.FieldLogger
+}
+
+func (p *BaseParty) GetLogger() logrus.FieldLogger {
+	return p.Logger
+}
+
+func (p *BaseParty) SetLogger(l logrus.FieldLogger) {
+	p.Logger = l
 }
 
 func (p *BaseParty) Running() bool {
@@ -132,6 +143,8 @@ func BaseStart(p Party, task string, prepare ...func(Round) *Error) *Error {
 			return err
 		}
 	}
+
+	p.Logger().Infof(fmt.Sprintf("party %s: %s round %d starting", p.round().Params().PartyID(), task, 1))
 	common.Logger.Infof("party %s: %s round %d starting", p.round().Params().PartyID(), task, 1)
 	defer func() {
 		common.Logger.Debugf("party %s: %s round %d finished", p.round().Params().PartyID(), task, 1)
@@ -169,8 +182,10 @@ func BaseUpdate(p Party, msg ParsedMessage, task string) (ok bool, err *Error) {
 					return r(false, err)
 				}
 				rndNum := p.round().RoundNumber()
+				p.Logger().Infof(fmt.Sprintf("party %s: %s round %d started", p.round().Params().PartyID(), task, rndNum))
 				common.Logger.Infof("party %s: %s round %d started", p.round().Params().PartyID(), task, rndNum)
 			} else {
+				p.Logger().Infof(fmt.Sprintf("party %s: %s finished!", p.PartyID(), task))
 				// finished! the round implementation will have sent the data through the `end` channel.
 				common.Logger.Infof("party %s: %s finished!", p.PartyID(), task)
 			}
