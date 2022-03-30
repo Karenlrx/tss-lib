@@ -16,6 +16,7 @@ import (
 	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
 	"github.com/binance-chain/tss-lib/eddsa/keygen"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 // Implements Party
@@ -88,6 +89,10 @@ func NewLocalParty(
 	p.temp.m = msg
 	p.temp.cjs = make([]*big.Int, partyCount)
 	return p
+}
+
+func (p *LocalParty) Logger() logrus.FieldLogger {
+	return p.GetLogger()
 }
 
 func (p *LocalParty) FirstRound() tss.Round {

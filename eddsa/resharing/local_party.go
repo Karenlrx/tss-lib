@@ -16,6 +16,7 @@ import (
 	"github.com/binance-chain/tss-lib/crypto/vss"
 	"github.com/binance-chain/tss-lib/eddsa/keygen"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 // Implements Party
@@ -58,6 +59,10 @@ type (
 		newBigXjs []*crypto.ECPoint // Xj to save in round 5
 	}
 )
+
+func (p *LocalParty) Logger() logrus.FieldLogger {
+	panic("implement me")
+}
 
 // Exported, used in `tss` client
 // The `key` is read from and/or written to depending on whether this party is part of the old or the new committee.

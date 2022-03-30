@@ -17,6 +17,7 @@ import (
 	"github.com/binance-chain/tss-lib/crypto/mta"
 	"github.com/binance-chain/tss-lib/ecdsa/keygen"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 // Implements Party
@@ -92,6 +93,7 @@ type (
 
 // Constructs a new ECDSA signing party. Note: msg may be left nil for one-round signing mode to only do the pre-processing steps.
 func NewLocalParty(
+	logger logrus.FieldLogger,
 	msg *big.Int,
 	params *tss.Parameters,
 	key keygen.LocalPartySaveData,
@@ -108,6 +110,8 @@ func NewLocalParty(
 		out:       out,
 		end:       end,
 	}
+	p.SetLogger(logger)
+	p.Logger().Infof(fmt.Sprintf("new signing local_party: n-%d t-%d", partyCount, params.Threshold()))
 	// msgs init
 	p.temp.signRound1Message1s = make([]tss.ParsedMessage, partyCount)
 	p.temp.signRound1Message2s = make([]tss.ParsedMessage, partyCount)
@@ -135,16 +139,21 @@ func NewLocalParty(
 
 // Constructs a new ECDSA signing party for one-round signing. The final SignatureData struct will be a partial struct containing only the data for a final signing round (see the readme).
 func NewLocalPartyWithOneRoundSign(
+	logger logrus.FieldLogger,
 	params *tss.Parameters,
 	key keygen.LocalPartySaveData,
 	out chan<- tss.Message,
 	end chan<- common.SignatureData,
 ) tss.Party {
-	return NewLocalParty(nil, params, key, out, end)
+	return NewLocalParty(logger, nil, params, key, out, end)
+}
+
+func (p *LocalParty) Logger() logrus.FieldLogger {
+	return p.GetLogger()
 }
 
 func (p *LocalParty) FirstRound() tss.Round {
-	return newRound1(p.params, &p.keys, &p.data, &p.temp, p.out, p.end)
+	return newRound1(p.GetLogger(), p.params, &p.keys, &p.data, &p.temp, p.out, p.end)
 }
 
 func (p *LocalParty) Start() *tss.Error {
