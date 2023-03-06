@@ -99,7 +99,7 @@ func (p *LocalParty) Logger() logrus.FieldLogger {
 }
 
 func (p *LocalParty) FirstRound() tss.Round {
-	return newRound1(p.params, &p.data, &p.temp, p.out, p.end)
+	return newRound1(p.params, &p.data, &p.temp, p.out, p.end, p.Logger())
 }
 
 func (p *LocalParty) Start() *tss.Error {

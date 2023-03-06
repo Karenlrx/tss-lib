@@ -9,6 +9,7 @@ package resharing
 import (
 	"github.com/binance-chain/tss-lib/ecdsa/keygen"
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -26,6 +27,7 @@ type (
 		newOK []bool // `ok` tracks parties which have been verified by Update(); this one is for the new committee
 		started bool
 		number  int
+		Log     logrus.FieldLogger
 	}
 	round1 struct {
 		*base

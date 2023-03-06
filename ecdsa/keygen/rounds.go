@@ -8,6 +8,7 @@ package keygen
 
 import (
 	"github.com/binance-chain/tss-lib/tss"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -24,6 +25,7 @@ type (
 		ok      []bool // `ok` tracks parties which have been verified by Update()
 		started bool
 		number  int
+		logger  logrus.FieldLogger
 	}
 	round1 struct {
 		*base
@@ -38,6 +40,10 @@ type (
 		*round3
 	}
 )
+
+func (round *round1) Logger() logrus.FieldLogger {
+	return round.logger
+}
 
 var (
 	_ tss.Round = (*round1)(nil)

@@ -60,6 +60,10 @@ type (
 	}
 )
 
+func (round *round1) Logger() logrus.FieldLogger {
+	return round.logger
+}
+
 var (
 	_ tss.Round = (*round1)(nil)
 	_ tss.Round = (*round2)(nil)

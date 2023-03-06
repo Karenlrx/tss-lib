@@ -6,6 +6,10 @@
 
 package tss
 
+import (
+	"github.com/sirupsen/logrus"
+)
+
 type Round interface {
 	Params() *Parameters
 	Start() *Error
@@ -16,4 +20,5 @@ type Round interface {
 	NextRound() Round
 	WaitingFor() []*PartyID
 	WrapError(err error, culprits ...*PartyID) *Error
+	Logger() logrus.FieldLogger
 }
